@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ExternalGiftCards</name>
+    </assembly>
+    <members>
+        <member name="T:ExternalGiftCards.Middleware.TenantMiddleware">
+            <summary>
+            Resolves the tenant from the {tenantId} route value, builds its SQL Server connection string
+            and populates the scoped <see cref="T:ExternalGiftCards.BusinessLayer.Common.ITenantProvider"/> and <see cref="T:ExternalGiftCards.BusinessLayer.Common.TenantContext"/>.
+            </summary>
+        </member>
+        <member name="T:ExternalGiftCards.Middleware.MiddlewareExtensions">
+            <summary>
+            Extension method used to add the tenant middleware to the HTTP request pipeline.
+            </summary>
+        </member>
+        <member name="T:ExternalGiftCards.ServiceExtension.SwaggerAPIDocsShorting">
+            <summary>
+            Orders the Swagger paths alphabetically.
+            </summary>
+        </member>
+        <member name="T:Program">
+            <summary>
+            Auto-generated public partial Program class for top-level statement apps.
+            </summary>
+        </member>
+    </members>
+</doc>
