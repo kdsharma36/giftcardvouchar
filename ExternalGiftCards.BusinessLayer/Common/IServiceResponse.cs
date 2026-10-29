@@ -8,7 +8,8 @@ namespace ExternalGiftCards.BusinessLayer.Common
         NoContent,
         InvalidPropertyValues,
         Unauthorized,
-        Forbidden
+        Forbidden,
+        BadGateway
     }
 
     public interface IServiceResponse<T>

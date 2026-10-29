@@ -1,4 +1,5 @@
 using ExternalGiftCards.BusinessLayer.Models;
+using ExternalGiftCards.BusinessLayer.Models.External;
 using ExternalGiftCards.DataAccessLayer.Entity;
 
 namespace ExternalGiftCards.BusinessLayer.MappingProfile
@@ -30,6 +31,13 @@ namespace ExternalGiftCards.BusinessLayer.MappingProfile
             AendLogin = src.AendLogin,
             AendMandant = src.AendMandant,
             Name2 = src.Key
+        };
+
+        // TODO: pass-through until the provider contract is known; map typed properties
+        // and mask sensitive fields (PIN, card number) here once it is.
+        public static GiftCardDetailDto ToGiftCardDetailDto(this ExternalGiftCardResponse src) => new()
+        {
+            Fields = new Dictionary<string, System.Text.Json.JsonElement>(src.Fields)
         };
     }
 }

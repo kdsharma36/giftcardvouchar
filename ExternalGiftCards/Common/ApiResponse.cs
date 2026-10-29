@@ -1,4 +1,5 @@
 using ExternalGiftCards.BusinessLayer.Common;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExternalGiftCards.Common
@@ -17,6 +18,9 @@ namespace ExternalGiftCards.Common
 
                 case ResponseStatus.NotFound:
                     return new NotFoundObjectResult(response.ErrorMessage);
+
+                case ResponseStatus.BadGateway:
+                    return new ObjectResult(response.ErrorMessage) { StatusCode = StatusCodes.Status502BadGateway };
 
                 case ResponseStatus.NoContent:
                     return new NoContentResult();
