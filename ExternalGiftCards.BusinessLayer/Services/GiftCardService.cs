@@ -1,9 +1,11 @@
-using System.Text.Json;
 using ExternalGiftCards.BusinessLayer.Common;
 using ExternalGiftCards.BusinessLayer.Interfaces;
 using ExternalGiftCards.BusinessLayer.MappingProfile;
 using ExternalGiftCards.BusinessLayer.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Text.Json;
 
 namespace ExternalGiftCards.BusinessLayer.Services
 {
@@ -14,12 +16,14 @@ namespace ExternalGiftCards.BusinessLayer.Services
         private readonly IPServerService _pServerService;
         private readonly IGiftCardApiService _giftCardApiService;
         private readonly ILogger<GiftCardService> _logger;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public GiftCardService(IPServerService pServerService, IGiftCardApiService giftCardApiService, ILogger<GiftCardService> logger)
+        public GiftCardService(IPServerService pServerService, IGiftCardApiService giftCardApiService, ILogger<GiftCardService> logger, IHttpContextAccessor httpContextAccessor)
         {
             _pServerService = pServerService;
             _giftCardApiService = giftCardApiService;
             _logger = logger;
+            _httpContextAccessor = httpContextAccessor;          
         }
 
         public async Task<IServiceResponse<GiftCardDetailDto>> GetGiftCardAsync(string client, string id, CancellationToken cancellationToken = default)
@@ -51,6 +55,12 @@ namespace ExternalGiftCards.BusinessLayer.Services
             }
 
             var url = pServer.Result.Value.Trim();
+
+            var tenantId = _httpContextAccessor.HttpContext?.Request.RouteValues["tenantId"]?.ToString();
+            url = url.Replace("{tenant}", tenantId);
+            url = url.Replace("{client}", client);
+            url = url.Replace("{id}", id);
+           
             if (!Uri.TryCreate(url, UriKind.Absolute, out var providerUri)
                 || (providerUri.Scheme != Uri.UriSchemeHttp && providerUri.Scheme != Uri.UriSchemeHttps))
             {
@@ -61,10 +71,25 @@ namespace ExternalGiftCards.BusinessLayer.Services
                 return response;
             }
 
+            // 2.1. Read the provider API key from p_server (key PRVKEY)
+            var providerkey = await _pServerService.GetPServerAsync(
+                client, GiftCardProviderConstants.PServerMc, GiftCardProviderConstants.providerAPIkey, cancellationToken);
+
+            if (providerkey.Status != ResponseStatus.Ok || string.IsNullOrWhiteSpace(providerkey.Result?.Value))
+            {
+                _logger.LogWarning("Gift card provider API key (key {Key}) not configured for client {Client}, mc {Mc}",
+                    GiftCardProviderConstants.providerAPIkey, client, GiftCardProviderConstants.PServerMc);
+                response.Status = ResponseStatus.NotFound;
+                response.ErrorMessage = $"Gift card provider API key ('{GiftCardProviderConstants.providerAPIkey}') is not configured for client '{client}'.";
+                return response;
+            }
+
+            var apikey = providerkey.Result.Value.Trim();
+            
             // 3. Call the external provider
             try
             {
-                var externalCard = await _giftCardApiService.GetGiftCardAsync(url, id, cancellationToken);
+                var externalCard = await _giftCardApiService.GetGiftCardAsync(apikey, url, cancellationToken);
                 if (externalCard is null)
                 {
                     response.Status = ResponseStatus.NotFound;

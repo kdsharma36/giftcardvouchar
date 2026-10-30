@@ -12,6 +12,6 @@ namespace ExternalGiftCards.BusinessLayer.Interfaces
         /// Returns null when the provider answers 404; throws <see cref="Common.ExternalApiException"/>
         /// for any other non-success status code.
         /// </summary>
-        Task<ExternalGiftCardResponse?> GetGiftCardAsync(string baseUrl, string id, CancellationToken cancellationToken = default);
+        Task<ExternalGiftCardResponse?> GetGiftCardAsync(string apikey , string requestUri, CancellationToken cancellationToken = default);
     }
 }

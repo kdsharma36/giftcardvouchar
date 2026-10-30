@@ -18,24 +18,23 @@ namespace ExternalGiftCards.Repositories.Repositories
             _context = context;
         }
 
-        public Task<PExternalProvider?> GetPServerAsync(string firma, string mc, string key, CancellationToken cancellationToken = default)
-        {
-            var query =
-                from ep in _context.PExternalProviders.AsNoTracking()
-                join ps in _context.PServers.AsNoTracking()
-                    on new { FirmaMandant = ep.FirmaMandant, Mc = ep.PServerMc }
-                    equals new { FirmaMandant = ps.FirmaMandant, Mc = ps.Mc }
-                join pf in _context.ProfileFixes.AsNoTracking()
-                    on ep.Key equals pf.Name2
-                where pf.Art == ExternalProviderKeyArt
-                   && pf.SpraSch == ProfileLanguage
-                   && ps.SystemType == ExternalProviderSystem
-                   && ps.FirmaMandant == firma
-                   && ps.Mc == mc
-                   && ep.Key == key
-                select ep;
-
-            return query.FirstOrDefaultAsync(cancellationToken);
+        public Task<PExternalProvider?> GetPServerAsync(
+    string firma, string mc, string key, CancellationToken cancellationToken = default)
+        {            
+            return _context.PExternalProviders
+                .AsNoTracking()
+                .Where(ep => ep.FirmaMandant == firma
+                          && ep.PServerMc == mc
+                          && ep.Key == key)
+                .Where(ep => _context.PServers.Any(ps =>
+                          ps.FirmaMandant == ep.FirmaMandant
+                       && ps.Mc == ep.PServerMc
+                       && ps.SystemType == ExternalProviderSystem))
+                .Where(ep => _context.ProfileFixes.Any(pf =>
+                          pf.Name2 == ep.Key
+                       && pf.Art == ExternalProviderKeyArt
+                       && pf.SpraSch == ProfileLanguage))
+                .FirstOrDefaultAsync(cancellationToken);
         }
     }
 }

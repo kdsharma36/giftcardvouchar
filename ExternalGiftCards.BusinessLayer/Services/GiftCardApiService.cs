@@ -17,11 +17,11 @@ namespace ExternalGiftCards.BusinessLayer.Services
             _httpClient = httpClient;
         }
 
-        public async Task<ExternalGiftCardResponse?> GetGiftCardAsync(string baseUrl, string id, CancellationToken cancellationToken = default)
+        public async Task<ExternalGiftCardResponse?> GetGiftCardAsync(string apikey,string requestUri, CancellationToken cancellationToken = default)
         {
-            var requestUri = BuildRequestUri(baseUrl, id);
-
-            using var response = await _httpClient.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+            using var req = new HttpRequestMessage(HttpMethod.Get, requestUri);
+            req.Headers.Add("X-API-Key", apikey);
+            using var response = await _httpClient.SendAsync(req, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
 
             if (response.StatusCode == HttpStatusCode.NotFound)
             {
@@ -39,16 +39,6 @@ namespace ExternalGiftCards.BusinessLayer.Services
             }
 
             return await response.Content.ReadFromJsonAsync<ExternalGiftCardResponse>(cancellationToken);
-        }
-
-        /// <summary>
-        /// TODO: confirm how the provider expects the id. Currently sent as query parameter: {url}?id={id}
-        /// (appended with '&amp;' if the configured URL already has a query string).
-        /// </summary>
-        private static Uri BuildRequestUri(string baseUrl, string id)
-        {
-            var separator = baseUrl.Contains('?') ? "&" : "?";
-            return new Uri($"{baseUrl}{separator}id={Uri.EscapeDataString(id)}", UriKind.Absolute);
-        }
+        }        
     }
 }

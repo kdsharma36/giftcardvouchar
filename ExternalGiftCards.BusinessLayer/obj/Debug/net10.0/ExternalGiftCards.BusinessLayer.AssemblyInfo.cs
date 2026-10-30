@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ExternalGiftCards.BusinessLayer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5b2215748603a4197be00e1d1e9b1d9fac3fbd36")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+50ce6b72d71a181b5b4c13a6a7874d36f44ef3c3")]
 [assembly: System.Reflection.AssemblyProductAttribute("ExternalGiftCards.BusinessLayer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ExternalGiftCards.BusinessLayer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

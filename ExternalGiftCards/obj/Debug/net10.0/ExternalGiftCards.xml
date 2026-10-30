@@ -4,6 +4,24 @@
         <name>ExternalGiftCards</name>
     </assembly>
     <members>
+        <member name="M:ExternalGiftCards.Controllers.ExternalGiftCardsController.GetGiftCard(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Returns the external gift card detail.
+            </summary>
+            <remarks>
+            The provider URL is read from p_server (key VERFIY) for the given client, then the
+            external provider is called with the gift card id.
+            </remarks>
+            <param name="client">Firma mandant.</param>
+            <param name="id">Gift card identifier.</param>
+            <param name="cancellationToken">Request cancellation token.</param>
+            <response code="200">Gift card detail.</response>
+            <response code="400">Missing or invalid client / id, or unknown tenant.</response>
+            <response code="404">Provider URL not configured, or gift card not found at the provider.</response>
+            <response code="422">Configured provider URL is invalid.</response>
+            <response code="500">Unexpected error.</response>
+            <response code="502">Provider error, timeout or unreachable.</response>
+        </member>
         <member name="T:ExternalGiftCards.Middleware.TenantMiddleware">
             <summary>
             Resolves the tenant from the {tenantId} route value, builds its SQL Server connection string

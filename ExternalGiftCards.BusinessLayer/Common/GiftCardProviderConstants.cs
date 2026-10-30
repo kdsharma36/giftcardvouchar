@@ -9,12 +9,13 @@ namespace ExternalGiftCards.BusinessLayer.Common
         /// p_server.mc of the external gift card provider entry.
         /// TODO: replace with the real mc. Until then the lookup finds no row and the endpoint returns 404.
         /// </summary>
-        public const string PServerMc = "TODO_SET_MC";
+        public const string PServerMc = "GIFTCARD";
 
         /// <summary>
         /// p_external_provider.key holding the provider's gift card detail URL.
         /// TODO: confirm spelling as stored in the database (VERFIY vs VERIFY).
         /// </summary>
-        public const string VerifyUrlKey = "VERFIY";
+        public const string VerifyUrlKey = "VERIFY";
+        public const string providerAPIkey = "PRVKEY";
     }
 }
