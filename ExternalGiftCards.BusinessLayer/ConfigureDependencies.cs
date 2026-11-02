@@ -57,7 +57,7 @@ namespace ExternalGiftCards.BusinessLayer
             services.AddScoped<IGiftCardService, GiftCardService>();
 
             // External gift card provider (base URL is read per request from p_server key VERFIY)
-            services.AddHttpClient<IGiftCardApiService, GiftCardApiService>("giftCardApi", client =>
+            services.AddHttpClient<IGiftCardExternalApiService, GiftCardExternalApiService>("giftCardApi", client =>
             {
                 client.Timeout = TimeSpan.FromSeconds(30);
             });

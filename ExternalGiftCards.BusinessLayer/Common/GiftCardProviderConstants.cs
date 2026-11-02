@@ -17,5 +17,10 @@ namespace ExternalGiftCards.BusinessLayer.Common
         /// </summary>
         public const string VerifyUrlKey = "VERIFY";
         public const string providerAPIkey = "PRVKEY";
+
+        /// <summary>
+        /// p_external_provider.key holding the provider's gift card redemption URL.
+        /// </summary>
+        public const string RedeemUrlKey = "REDEEM";
     }
 }
