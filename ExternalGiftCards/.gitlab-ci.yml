@@ -1,0 +1,10 @@
+variables:
+  ROOT_NAMESPACE: external-gift-cards
+  DOCKERFILE_SRC_PATH: ./Dockerfile
+  MODULE_ID: 0 # TODO: request a new module id
+  NEXUS_COMPONENT_NAME_ACTUAL: external-gift-cards
+
+include:
+  - project: 'INHOUSE/symphony/common-gitlab-ci'
+    ref: V5
+    file: dotnet-docker.gitlab-ci.yml
